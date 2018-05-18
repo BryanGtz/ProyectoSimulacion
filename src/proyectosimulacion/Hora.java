@@ -51,7 +51,7 @@ public class Hora {
     }
     
     public Hora mas(Hora h){
-        
+        //Aun no está terminado el método
         h.segundos += this.segundos;
         return h;
     }

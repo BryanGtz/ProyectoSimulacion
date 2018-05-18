@@ -6,8 +6,6 @@
 package proyectosimulacion;
 
 import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
