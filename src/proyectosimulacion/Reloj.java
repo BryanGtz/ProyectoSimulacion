@@ -21,12 +21,12 @@ public class Reloj extends JPanel implements Runnable{
     public Reloj(Escenario es){
         e=es;
         hora = new Hora();
-        reloj = new JLabel();
+        reloj = new JLabel(hora.toString());
+        add(reloj);
     }
 
     @Override
     public void run() {
-        add(reloj);
         while (this.hora.menorQue(new Hora(9000))) {
             hora.mas(1);
             reloj.setText(hora.toString());

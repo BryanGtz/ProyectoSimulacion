@@ -18,21 +18,25 @@ public class Escenario extends JPanel implements Runnable {
     boolean iniciar=false;
     Bus b;
     VariableAleatoria va = new VariableAleatoria();
-    Ventana v; //v tiene de atributo un objeto de tipo reloj, el cual tiene la hora desde 0 hasta 150 horas
+    Reloj r;
     
-    public Escenario(Ventana v){
-        this.v = v;
+    public Escenario(){
         setLayout(null);
         b = new Bus(this, 150,75);
         add(b);
+        r = new Reloj(this);
+        r.setBounds(100,0,200,100);
+        
+        add(r);
     }
     
     //Animacion
     @Override
     public void run() {
         while (iniciar) {
+            Thread t = new Thread(r);
+            t.start();
             b.setBounds(b.getX()+2,b.getY(),150,75);
-            
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {

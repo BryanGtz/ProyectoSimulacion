@@ -23,8 +23,8 @@ public class Ventana extends JFrame {
     JButton reiniciar = new JButton("Reiniciar");
     JPanel botones = new JPanel();
     JLabel hora = new JLabel();
-    Escenario escenario = new Escenario(this);
-    Reloj reloj = new Reloj(escenario);
+    Escenario escenario = new Escenario();
+    //Reloj reloj = new Reloj(escenario);
     
     public Ventana(){
         buildLayout();
@@ -59,9 +59,9 @@ public class Ventana extends JFrame {
     private void buildLayout(){
         botones.add(inicio_pausa);
         botones.add(reiniciar);
-        Thread t = new Thread(reloj);
-        t.start();
-        botones.add(reloj);
+//        Thread t = new Thread(reloj);
+//        t.start();
+//        botones.add(reloj);
         add(botones,"North");
         escenario.setBounds(0,0,1000,500);
         add(escenario,BorderLayout.CENTER);

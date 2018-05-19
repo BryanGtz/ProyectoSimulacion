@@ -23,21 +23,19 @@ public class Bus extends JPanel {
     
     BufferedImage bi = null;
     Escenario e;
-    Hora horaLlegada;
     
     public Bus(Escenario e, int ancho, int alto){
         setBounds(0,0,ancho,alto);
         this.e = e;
-        horaLlegada = new Hora();
-    }
-    
-    @Override
-    public void paintComponent(Graphics g){
         try {
             bi = ImageIO.read(new File("bus.png"));
         } catch (IOException ex) {
             System.out.println("No se encontro el archivo");
         }
+    }
+    
+    @Override
+    public void paintComponent(Graphics g){
         g.drawImage(bi, 0, 0,getWidth(),getHeight(), this);
     }
     
