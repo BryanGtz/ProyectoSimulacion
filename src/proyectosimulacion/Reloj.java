@@ -20,6 +20,7 @@ public class Reloj extends JPanel implements Runnable{
     Escenario e;
     Hora hora;
     JLabel reloj;
+    boolean iniciar;
     
     public Reloj(Escenario es){
         e=es;
@@ -27,15 +28,16 @@ public class Reloj extends JPanel implements Runnable{
         reloj = new JLabel(hora.toString());
         reloj.setFont( new Font("TimesRoman",Font.PLAIN,24));
         add(reloj);
+        iniciar = false;
     }
 
     @Override
     public void run() {
-        while (this.hora.menorQue(new Hora(9000))) {
+        while (this.hora.menorQue(new Hora(9600))&&iniciar) {
             hora.mas(1);
             reloj.setText(hora.toString());
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1);
             } catch (InterruptedException ex) {
                 
             }

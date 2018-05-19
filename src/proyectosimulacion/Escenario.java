@@ -21,6 +21,7 @@ public class Escenario extends JPanel implements Runnable {
     Fila filaInspeccion;
     Fila filaReparacion;
     Thread t;
+    Hora horaLlegadaSigBus;
     
     public Escenario(){
         setLayout(null);
@@ -28,19 +29,23 @@ public class Escenario extends JPanel implements Runnable {
         r.setBounds(800,0,200,100);
         add(r);
         t = new Thread(r);
+        t.start();
         filaInspeccion = new Fila();
         filaReparacion = new Fila();
+        double exp = va.Exponencial(120); //se genera la variable aleatoria exponencial
+        horaLlegadaSigBus = new Hora(exp);
+        System.out.println(horaLlegadaSigBus);
     }
     
     //Animacion
     @Override
     public void run() {
         while (iniciar) {
-            t.start();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                
+            r.iniciar = true;
+            if(r.hora.equals(horaLlegadaSigBus)){
+                Bus b = new Bus(this, (int)(Math.random()*1000), (int)(Math.random()*1000));
+                add(b);
+                System.out.println("entro");
             }
         }
         

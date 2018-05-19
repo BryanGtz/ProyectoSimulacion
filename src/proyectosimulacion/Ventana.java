@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author User
+ * @author Equipo 6
  */
 public class Ventana extends JFrame {
     

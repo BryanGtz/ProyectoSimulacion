@@ -71,13 +71,24 @@ public class Hora {
         }
         return this;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Hora)){
+            return false;
+        }
+        else{
+            Hora h = (Hora) obj;
+            return (hora==h.hora&&minutos==h.minutos&&segundos==h.segundos);
+        }
+    }
     
     @Override
     public String toString(){
         String texto = "";
         texto+= (hora<10)?"0"+hora+":":hora+":";
-        texto+= (minutos<10)?"0"+minutos+":":minutos+":";
-        texto+= (segundos<10)?"0"+segundos:segundos;
+        texto+= (minutos<10)?"0"+minutos:minutos;
+        //texto+= (segundos<10)?":0"+segundos:":"+segundos;
         return texto;
     }
     
