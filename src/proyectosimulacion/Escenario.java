@@ -16,27 +16,27 @@ import javax.swing.JPanel;
 public class Escenario extends JPanel implements Runnable {
 
     boolean iniciar=false;
-    Bus b;
     VariableAleatoria va = new VariableAleatoria();
     Reloj r;
+    Fila filaInspeccion;
+    Fila filaReparacion;
+    Thread t;
     
     public Escenario(){
         setLayout(null);
-        b = new Bus(this, 150,75);
-        add(b);
         r = new Reloj(this);
-        r.setBounds(100,0,200,100);
-        
+        r.setBounds(800,0,200,100);
         add(r);
+        t = new Thread(r);
+        filaInspeccion = new Fila();
+        filaReparacion = new Fila();
     }
     
     //Animacion
     @Override
     public void run() {
         while (iniciar) {
-            Thread t = new Thread(r);
             t.start();
-            b.setBounds(b.getX()+2,b.getY(),150,75);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {

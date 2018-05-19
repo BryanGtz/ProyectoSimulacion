@@ -5,6 +5,9 @@
  */
 package proyectosimulacion;
 
+import java.awt.Font;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -22,6 +25,7 @@ public class Reloj extends JPanel implements Runnable{
         e=es;
         hora = new Hora();
         reloj = new JLabel(hora.toString());
+        reloj.setFont( new Font("TimesRoman",Font.PLAIN,24));
         add(reloj);
     }
 
@@ -30,6 +34,11 @@ public class Reloj extends JPanel implements Runnable{
         while (this.hora.menorQue(new Hora(9000))) {
             hora.mas(1);
             reloj.setText(hora.toString());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                
+            }
         }
     }
     

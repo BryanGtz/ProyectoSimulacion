@@ -16,7 +16,7 @@ public class Hora {
     int segundos;
     
     /**
-     * Constructor que inicia en 0 la hora, minutos, segundos
+     * Constructor que inicia en 0 las horas, minutos y segundos
     */
     
     public Hora(){
@@ -31,17 +31,23 @@ public class Hora {
         segundos = (int)(min*60)%60;
     }
     
+    /**
+    * Método que comprueba si la hora es menor que otra
+    * @param h Hora a comparar
+    * @return true si this.hora es menor que h
+    * false de otra forma
+    */
+    
     public boolean menorQue(Hora h){
         if(this.hora<h.hora)
             return true;
-        else if(this.hora==h.hora){
+        else if(this.hora==h.hora)
             if(this.minutos<h.minutos)
                 return true;
             else if(this.minutos==h.minutos)
                 return this.segundos<h.segundos;
             else
                 return false;
-        }
         else
             return false;
     }
@@ -57,9 +63,8 @@ public class Hora {
             minutos++;
             segundos = 0;
         }
-        else{
+        else
             segundos+=seg;
-        }
         if(minutos>59){
             hora++;
             minutos = 0;
@@ -69,7 +74,11 @@ public class Hora {
     
     @Override
     public String toString(){
-        return hora+":"+minutos+":"+segundos;
+        String texto = "";
+        texto+= (hora<10)?"0"+hora+":":hora+":";
+        texto+= (minutos<10)?"0"+minutos+":":minutos+":";
+        texto+= (segundos<10)?"0"+segundos:segundos;
+        return texto;
     }
     
 }

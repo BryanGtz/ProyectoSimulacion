@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -22,9 +21,7 @@ public class Ventana extends JFrame {
     JButton inicio_pausa = new JButton("Empezar");
     JButton reiniciar = new JButton("Reiniciar");
     JPanel botones = new JPanel();
-    JLabel hora = new JLabel();
     Escenario escenario = new Escenario();
-    //Reloj reloj = new Reloj(escenario);
     
     public Ventana(){
         buildLayout();
@@ -43,7 +40,6 @@ public class Ventana extends JFrame {
                 Thread t = new Thread(escenario);
                 t.start();
             }
-        
         });
         
         reiniciar.addActionListener(new ActionListener(){
@@ -52,16 +48,12 @@ public class Ventana extends JFrame {
                 Ventana.this.dispose();
                 new Ventana().setVisible(true);
             }
-            
         });
     }
     
     private void buildLayout(){
         botones.add(inicio_pausa);
         botones.add(reiniciar);
-//        Thread t = new Thread(reloj);
-//        t.start();
-//        botones.add(reloj);
         add(botones,"North");
         escenario.setBounds(0,0,1000,500);
         add(escenario,BorderLayout.CENTER);
@@ -72,5 +64,4 @@ public class Ventana extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    
 }
