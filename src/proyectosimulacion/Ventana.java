@@ -21,7 +21,10 @@ public class Ventana extends JFrame {
     JButton inicio_pausa = new JButton("Empezar");
     JButton reiniciar = new JButton("Reiniciar");
     JPanel botones = new JPanel();
-    Escenario escenario = new Escenario();
+    Reloj r = new Reloj();
+    Escenario escenario = new Escenario(r);
+    Thread t;
+    Thread t2;
     
     public Ventana(){
         buildLayout();
@@ -31,14 +34,18 @@ public class Ventana extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(escenario.iniciar){
                     escenario.iniciar = false;
+                    r.iniciar = false;
                     inicio_pausa.setText("Reanudar");
                 }
                 else{
                     escenario.iniciar = true;
+                    r.iniciar = true;
                     inicio_pausa.setText("Pausar");
                 }
-                Thread t = new Thread(escenario);
+                t = new Thread(escenario);
                 t.start();
+                t2 = new Thread(r);
+                t2.start();
             }
         });
         

@@ -20,6 +20,10 @@ public class Fila extends JPanel implements Runnable{
     public Fila(){
         fila = new LinkedList();
     }
+    
+    public void addFila(Bus b){
+        
+    }
 
     @Override
     public void run() {

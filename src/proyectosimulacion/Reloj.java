@@ -16,14 +16,12 @@ import javax.swing.JPanel;
  * @author HP
  */
 public class Reloj extends JPanel implements Runnable{
-    
-    Escenario e;
+
     Hora hora;
     JLabel reloj;
     boolean iniciar;
     
-    public Reloj(Escenario es){
-        e=es;
+    public Reloj(){
         hora = new Hora();
         reloj = new JLabel(hora.toString());
         reloj.setFont( new Font("TimesRoman",Font.PLAIN,24));
@@ -33,13 +31,19 @@ public class Reloj extends JPanel implements Runnable{
 
     @Override
     public void run() {
-        while (this.hora.menorQue(new Hora(9600))&&iniciar) {
-            hora.mas(1);
-            reloj.setText(hora.toString());
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                
+        while(true){
+            if(iniciar){
+                while (this.hora.menorQue(new Hora(9600))) {
+                    System.out.println("entra");
+                    hora.mas(1);
+                    reloj.setText(hora.toString());
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException ex) {
+
+                    }
+                }
+                break;
             }
         }
     }
