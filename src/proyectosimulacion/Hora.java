@@ -53,9 +53,20 @@ public class Hora {
     }
     
     public Hora mas(Hora h){
-        //Aun no está terminado el método
-        h.segundos += this.segundos;
-        return h;
+        if(segundos+h.segundos>59){
+            minutos++;
+            segundos = 0;
+        }
+        else
+            segundos+=h.segundos;
+        if(minutos+h.minutos>59){
+            hora++;
+            minutos = 0;
+        }
+        else
+            minutos+=h.minutos;
+        hora+=h.hora;
+        return this;
     }
     
     public Hora mas(int seg){

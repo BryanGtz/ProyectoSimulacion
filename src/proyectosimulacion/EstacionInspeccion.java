@@ -19,8 +19,12 @@ public class EstacionInspeccion {
         tiempoRevisionActual = new Hora();
     }
     
-    public EstacionInspeccion(Bus b){
-        bus = b;
+    public void addBus(Bus b){
+        if(libre){
+            if(b!=null){
+                bus = b;
+            }
+        }
     }
     
 }

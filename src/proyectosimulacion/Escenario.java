@@ -21,6 +21,7 @@ public class Escenario extends JPanel implements Runnable {
     Fila filaInspeccion;
     Fila filaReparacion;
     Hora horaLlegadaSigBus;
+    EstacionInspeccion eIns;
     
     public Escenario(Reloj r){
         setLayout(null);
@@ -29,22 +30,35 @@ public class Escenario extends JPanel implements Runnable {
         add(this.r);
         filaInspeccion = new Fila();
         filaReparacion = new Fila();
+        eIns = new EstacionInspeccion();
         double exp = va.Exponencial(120); //se genera la variable aleatoria exponencial
         horaLlegadaSigBus = new Hora(exp); //se guarda la hora que llega el primer bus
-        System.out.println(horaLlegadaSigBus);
+        
     }
     
     //Animacion
     @Override
     public void run() {        
-        while(true){
-            if (iniciar) {
-                System.out.println("inicia hilo de escenario");
-                if(r.hora.equals(horaLlegadaSigBus)){
-                    Bus b = new Bus(this, (int)(Math.random()*1000), (int)(Math.random()*1000));
-                    add(b);
-                    System.out.println("entro");
-                }
+        while(iniciar){
+            if(r.hora.equals(horaLlegadaSigBus)){ //se comprueba que la hora de llegada siguiente ya llegó
+                System.out.println("Bus 1\nHora de llegada:"+horaLlegadaSigBus);
+                Bus b = new Bus(this, 20, 20); //se hace llegar al bus
+                filaInspeccion.fila.offer(b); //se añade el autobus a la fila
+                
+                double exp = va.Exponencial(120);
+                Hora h = new Hora(exp);
+                System.out.println(h);
+                horaLlegadaSigBus = horaLlegadaSigBus.mas(h);
+                System.out.println("Siguiente hora: "+horaLlegadaSigBus);
+            }
+            if(eIns.libre){
+                eIns.addBus(filaInspeccion.fila.poll());
+                System.out.println("Hora de inicio de inspeccion: "+r.hora);
+            }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+
             }
         }
     }

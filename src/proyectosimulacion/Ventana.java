@@ -34,17 +34,16 @@ public class Ventana extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(escenario.iniciar){
                     escenario.iniciar = false;
-                    r.iniciar = false;
                     inicio_pausa.setText("Reanudar");
                 }
                 else{
                     escenario.iniciar = true;
-                    r.iniciar = true;
                     inicio_pausa.setText("Pausar");
                 }
-                t = new Thread(escenario);
+                r.iniciar = !r.iniciar;
+                Thread t = new Thread(escenario);
                 t.start();
-                t2 = new Thread(r);
+                Thread t2 = new Thread(r);
                 t2.start();
             }
         });
