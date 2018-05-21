@@ -32,13 +32,13 @@ public class Reloj extends JPanel implements Runnable{
     @Override
     public void run() {
         while (this.hora.menorQue(new Hora(9600))&&iniciar) {
-            hora.mas(1);
-            reloj.setText(hora.toString());
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-
-            }
+//            hora.mas(1);
+//            reloj.setText(hora.toString());
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException ex) {
+//
+//            }
         }
     }  
 }

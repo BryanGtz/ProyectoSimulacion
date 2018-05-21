@@ -43,8 +43,8 @@ public class Ventana extends JFrame {
                 r.iniciar = !r.iniciar;
                 Thread t = new Thread(escenario);
                 t.start();
-                Thread t2 = new Thread(r);
-                t2.start();
+//                Thread t2 = new Thread(r);
+//                t2.start();
             }
         });
         

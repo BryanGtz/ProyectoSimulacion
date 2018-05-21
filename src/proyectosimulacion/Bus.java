@@ -38,5 +38,5 @@ public class Bus extends JPanel {
     public void paintComponent(Graphics g){
         g.drawImage(bi, 0, 0,getWidth(),getHeight(), this);
     }
-    
+   
 }

@@ -5,25 +5,46 @@
  */
 package proyectosimulacion;
 
+import java.awt.Graphics;
+import javax.swing.JPanel;
+
 /**
  *
  * @author HP
  */
-public class EstacionInspeccion {
-    boolean libre;
-    Hora tiempoRevisionActual;
-    Bus bus;
+public class EstacionInspeccion extends JPanel{
     
-    public EstacionInspeccion(){
+    boolean libre;
+    Hora horaSalida;
+    Bus bus;
+    VariableAleatoria va = new VariableAleatoria();
+    
+    public EstacionInspeccion(int ancho, int alto){
+        setSize(ancho,alto);
+        setLayout(null);
         libre = true;
-        tiempoRevisionActual = new Hora();
+        horaSalida = new Hora();
     }
     
-    public void addBus(Bus b){
+    public void addBus(Bus b, Hora horaInicio){
         if(libre){
             if(b!=null){
                 bus = b;
+                libre = false;
+                double exp = va.Uniforme(15, 63);
+                Hora duracionServicio = new Hora(exp);
+                System.out.println("Duracion del servicio: "+duracionServicio);
+                horaSalida = duracionServicio.mas(horaInicio);
+                System.out.println("Hora de salida: "+horaSalida);
             }
+        }
+    }
+    
+    @Override
+    public void paintComponent(Graphics g){
+        if(bus!=null){
+            bus.setLocation(0, 0);
+            add(bus);
         }
     }
     
