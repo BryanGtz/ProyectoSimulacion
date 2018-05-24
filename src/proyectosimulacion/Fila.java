@@ -14,7 +14,7 @@ import javax.swing.JPanel;
  *
  * @author HP
  */
-public class Fila extends JPanel implements Runnable{
+public class Fila extends JPanel{
     
     Queue<Bus> fila;
     
@@ -27,21 +27,16 @@ public class Fila extends JPanel implements Runnable{
     @Override
     public void paintComponent(Graphics g){
         int x = getWidth();//coordenada x auxiliar para pintar la fila de autobuses
-        if(!fila.isEmpty()){
+//        if(!fila.isEmpty()){
             for(Bus b: fila){
                 x-=b.getWidth();
                 b.setLocation(x, b.getY());
                 add(b);
             }
-        }
-        else{
+//        }
+//        else{
 //            g.drawString("La fila esta vacia", 0, 10);
 //System.out.println("La fila esta vacia");
-        }
-    }
-
-    @Override
-    public void run() {
-        
+//        }
     }
 }

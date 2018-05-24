@@ -54,7 +54,8 @@ public class Escenario extends JPanel implements Runnable {
                     System.out.println("Bus "+numBus+"\nHora de llegada:"+horaLlegadaSigBus);
                     Bus b = new Bus(this, 100, 50); //se hace llegar al bus
                     filaInspeccion.fila.offer(b); //se añade el autobus a la fila
-//                    repaint();
+                    validate();
+                    repaint();
                     double exp = va.Exponencial(mediaExpLlegada);
                     Hora h = new Hora(exp);
                     System.out.println(h);
@@ -63,8 +64,10 @@ public class Escenario extends JPanel implements Runnable {
                 }
                 if(eIns.libre&&!filaInspeccion.fila.isEmpty()){
                     System.out.println("Hora de inicio de inspeccion: "+r.hora);
-                    eIns.addBus(filaInspeccion.fila.poll(),r.hora);
-//                    repaint();
+                    Bus b = filaInspeccion.fila.poll();
+                    eIns.addBus(b,r.hora);                    
+                    validate();
+                    repaint();
                 }
                 if(!eIns.libre&&r.hora.equals(eIns.horaSalida)){
                     int reparacion = va.bernoulli(0.30);
@@ -79,15 +82,22 @@ public class Escenario extends JPanel implements Runnable {
                         eIns.bus = null;
                         eIns.libre = true;
                     }
+                    validate();
+                    repaint();
                 }
                 r.hora.mas(1);
                 r.reloj.setText(r.hora.toString());
 //                System.out.println(r.hora);
+                validate();
                 repaint();
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException ex) {
-
+//                try {
+//                    Thread.sleep(1);
+//                } catch (InterruptedException ex) {
+//
+//                }
+                //Mantiene ocupado el hilo por 0.01 milisegundos
+                long espera = System.nanoTime()+10000;
+                while (espera>System.nanoTime()) {                    
                 }
             }
         }
