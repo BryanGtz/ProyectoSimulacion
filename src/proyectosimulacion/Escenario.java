@@ -24,6 +24,7 @@ public class Escenario extends JPanel implements Runnable {
     EstacionInspeccion eIns;
     int numBus = 0;
     int mediaExpLlegada = 120;
+    int espera = 10000;
     
     public Escenario(Reloj r){
         setLayout(null);
@@ -47,8 +48,7 @@ public class Escenario extends JPanel implements Runnable {
     //Animacion
     @Override
     public void run() {        
-        while(iniciar){
-            while(r.hora.menorQue(new Hora(9600))){
+        while(iniciar&&r.hora.menorQue(new Hora(9600))){
                 if(r.hora.equals(horaLlegadaSigBus)){ //se comprueba que la hora de llegada siguiente ya llegó
                     numBus++;
                     System.out.println("Bus "+numBus+"\nHora de llegada:"+horaLlegadaSigBus);
@@ -95,12 +95,19 @@ public class Escenario extends JPanel implements Runnable {
 //                } catch (InterruptedException ex) {
 //
 //                }
-                //Mantiene ocupado el hilo por 0.01 milisegundos
-                long espera = System.nanoTime()+10000;
-                while (espera>System.nanoTime()) {                    
-                }
-            }
+                //Mantiene ocupado el hilo por 10000 nanosegundos
+                esperar(espera);
+            
         }
+    }
+    
+    public synchronized void esperar(int nanosegundos){
+        long espera = System.nanoTime()+nanosegundos;
+        while (espera>System.nanoTime()) {}
+    }
+    
+    public synchronized void setEspera(int nanosegundos){
+        espera = nanosegundos;
     }
     
 }

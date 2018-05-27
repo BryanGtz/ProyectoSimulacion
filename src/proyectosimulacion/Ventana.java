@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -23,12 +26,22 @@ public class Ventana extends JFrame {
     JPanel botones = new JPanel();
     Reloj r = new Reloj();
     Escenario escenario = new Escenario(r);
+    JSlider slider = new JSlider(10,1000);
     Thread t;
     Thread t2;
     
     public Ventana(){
         buildLayout();
         config();
+        slider.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
+                int espera = (int)source.getValue();
+                escenario.setEspera(espera);                
+            }
+            
+        });
         inicio_pausa.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,15 +64,17 @@ public class Ventana extends JFrame {
         reiniciar.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ventana.this.dispose();
+                dispose();
                 new Ventana().setVisible(true);
             }
         });
     }
     
     private void buildLayout(){
+        slider.setInverted(true);
         botones.add(inicio_pausa);
         botones.add(reiniciar);
+        botones.add(slider);
         add(botones,"North");
         escenario.setBounds(0,0,1000,500);
         add(escenario,BorderLayout.CENTER);

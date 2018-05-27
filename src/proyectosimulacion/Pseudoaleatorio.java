@@ -21,13 +21,15 @@ public class Pseudoaleatorio {
     private int Xn;
     private int M;
     
-    public Pseudoaleatorio(String Ruta){
+    public Pseudoaleatorio(String Ruta, int num){
         try {
             BufferedReader br = new BufferedReader(new FileReader(Ruta));
             String linea = "";
             while ((linea=br.readLine())!=null) {
-                if(linea.matches("[\\d\\t]+")){                   
-                    linea = br.readLine();
+                if(linea.matches("[\\d\\t]+")){ 
+                    for (int i = 0; i < num; i++) {
+                        linea = br.readLine();
+                    }
                     String[] split = linea.split("\t");
                     A = Integer.parseInt(split[0]);
                     C = Integer.parseInt(split[1]);
@@ -43,6 +45,10 @@ public class Pseudoaleatorio {
             JOptionPane.showMessageDialog(null, "No se pudo leer el archivo");
             System.exit(1);
         }
+    }
+    
+    public Pseudoaleatorio(String ruta){
+        this(ruta,1);
     }
     
     public double getNum(){
