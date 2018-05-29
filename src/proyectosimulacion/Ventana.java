@@ -30,6 +30,12 @@ public class Ventana extends JFrame {
     Thread t;
     Thread t2;
     
+    public Ventana(Ventana v){
+        this();
+        escenario.va = v.escenario.va;
+        System.out.println("=============================================Replica siguiente");
+    }
+    
     public Ventana(){
         buildLayout();
         config();
@@ -65,7 +71,7 @@ public class Ventana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new Ventana().setVisible(true);
+                new Ventana(Ventana.this).setVisible(true);
             }
         });
     }

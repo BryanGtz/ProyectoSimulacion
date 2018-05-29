@@ -99,7 +99,7 @@ public class Hora {
         String texto = "";
         texto+= (hora<10)?"0"+hora+":":hora+":";
         texto+= (minutos<10)?"0"+minutos:minutos;
-        //texto+= (segundos<10)?":0"+segundos:":"+segundos;
+        texto+= (segundos<10)?":0"+segundos:":"+segundos;
         return texto;
     }
     

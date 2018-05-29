@@ -42,9 +42,13 @@ public class EstacionInspeccion extends JPanel{
     
     @Override
     public void paintComponent(Graphics g){
+        g.drawRect(0, 0, getWidth(), getHeight());
         if(bus!=null){
             bus.setLocation(0, 0);
             add(bus);
+        }
+        else{
+            removeAll();
         }
     }
     

@@ -5,8 +5,6 @@
  */
 package proyectosimulacion;
 
-import java.util.Timer;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -22,9 +20,11 @@ public class Escenario extends JPanel implements Runnable {
     Fila filaReparacion;
     Hora horaLlegadaSigBus;
     EstacionInspeccion eIns;
+    EstacionReparacion eRep1;
+    EstacionReparacion eRep2;
     int numBus = 0;
     int mediaExpLlegada = 120;
-    int espera = 10000;
+    int espera = 50000;
     
     public Escenario(Reloj r){
         setLayout(null);
@@ -40,9 +40,15 @@ public class Escenario extends JPanel implements Runnable {
         eIns = new EstacionInspeccion(100,100);
         eIns.setLocation(400,0);
         add(eIns);
+        eRep1 = new EstacionReparacion(100,100);
+        eRep1.setLocation(700,150);
+        add(eRep1);
+        eRep2 = new EstacionReparacion(100,100);
+        eRep2.setLocation(700,250);
+        add(eRep2);
         double exp = va.Exponencial(mediaExpLlegada); //se genera la variable aleatoria exponencial
         horaLlegadaSigBus = new Hora(exp); //se guarda la hora que llega el primer bus
-        
+        System.out.println("Primer hora:            "+horaLlegadaSigBus);
     }
     
     //Animacion
@@ -52,7 +58,7 @@ public class Escenario extends JPanel implements Runnable {
                 if(r.hora.equals(horaLlegadaSigBus)){ //se comprueba que la hora de llegada siguiente ya llegó
                     numBus++;
                     System.out.println("Bus "+numBus+"\nHora de llegada:"+horaLlegadaSigBus);
-                    Bus b = new Bus(this, 100, 50); //se hace llegar al bus
+                    Bus b = new Bus(this, 100, 50, numBus); //se hace llegar al bus
                     filaInspeccion.fila.offer(b); //se añade el autobus a la fila
                     validate();
                     repaint();
@@ -65,7 +71,7 @@ public class Escenario extends JPanel implements Runnable {
                 if(eIns.libre&&!filaInspeccion.fila.isEmpty()){
                     System.out.println("Hora de inicio de inspeccion: "+r.hora);
                     Bus b = filaInspeccion.fila.poll();
-                    eIns.addBus(b,r.hora);                    
+                    eIns.addBus(b,r.hora);
                     validate();
                     repaint();
                 }
@@ -82,6 +88,32 @@ public class Escenario extends JPanel implements Runnable {
                         eIns.bus = null;
                         eIns.libre = true;
                     }
+                    validate();
+                    repaint();
+                }
+                if(eRep1.libre&&!filaReparacion.fila.isEmpty()){
+                    System.out.println("Hora de inicio de reparación: "+r.hora);
+                    Bus b = filaReparacion.fila.poll();
+                    eRep1.addBus(b,r.hora);
+                    validate();
+                    repaint();
+                }
+                else if(eRep2.libre&&!filaReparacion.fila.isEmpty()){
+                    System.out.println("Hora de inicio de reparación: "+r.hora);
+                    Bus b = filaReparacion.fila.poll();
+                    eRep2.addBus(b,r.hora);
+                    validate();
+                    repaint();
+                }
+                if(!eRep1.libre&&r.hora.equals(eRep1.horaSalida)){
+                    System.out.println("Terminó la reparacion");
+                    eRep1.liberar();
+                    validate();
+                    repaint();
+                }
+                if(!eRep2.libre&&r.hora.equals(eRep2.horaSalida)){
+                    System.out.println("Terminó la reparacion");
+                    eRep2.liberar();
                     validate();
                     repaint();
                 }

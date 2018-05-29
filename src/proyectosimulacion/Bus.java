@@ -23,12 +23,15 @@ public class Bus extends JPanel {
     
     BufferedImage bi = null;
     Escenario e;
+    int num;
     
-    public Bus(Escenario e, int ancho, int alto){
+    public Bus(Escenario e, int ancho, int alto, int num){
         setBounds(0,0,ancho,alto);
         this.e = e;
+        this.num = num;
+        int numImagen = (this.num%10)+1;
         try {
-            bi = ImageIO.read(new File("bus.png"));
+            bi = ImageIO.read(new File("bus"+numImagen+".png"));
         } catch (IOException ex) {
             System.out.println("No se encontro el archivo");
         }
