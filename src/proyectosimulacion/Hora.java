@@ -25,6 +25,12 @@ public class Hora {
         segundos = 0;
     }
     
+    public Hora(Hora hora){
+        this.hora = hora.hora;
+        this.minutos = hora.minutos;
+        this.segundos = hora.segundos;
+    }
+    
     public Hora(double min){
         hora = (int)min/60;
         minutos = (int) Math.floor(min%60);
@@ -81,6 +87,39 @@ public class Hora {
             minutos = 0;
         }
         return this;
+    }
+    
+    public Hora menos(Hora h){
+        if(segundos-h.segundos<0){
+            if((minutos+(segundos-h.segundos))<0)
+                minutos = 59;
+            segundos = 59;
+        }
+        else
+            segundos-=h.segundos;
+        if(minutos-h.minutos<0){
+            if((hora-1)<0)
+                minutos = 59;
+            minutos = 0;
+        }
+        else
+            minutos-=h.minutos;
+        hora-=h.hora;
+        return this;
+    }
+    
+    public Hora entre(Hora h){
+        double minThis = aSeg();
+        double minH = h.aSeg();
+        return new Hora(minThis/minH);
+    }
+    
+    public Hora entre(int num){
+        return new Hora(aSeg()/num);
+    }
+    
+    public double aSeg(){
+        return (this.hora*60)+(this.minutos)+(this.segundos/60);
     }
 
     @Override

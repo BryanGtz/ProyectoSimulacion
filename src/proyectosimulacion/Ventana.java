@@ -26,14 +26,14 @@ public class Ventana extends JFrame {
     JPanel botones = new JPanel();
     Reloj r = new Reloj();
     Escenario escenario = new Escenario(r);
-    JSlider slider = new JSlider(10,1000);
+    JSlider slider = new JSlider(100,1000000,500000);
     Thread t;
     Thread t2;
     
     public Ventana(Ventana v){
         this();
         escenario.va = v.escenario.va;
-        System.out.println("=============================================Replica siguiente");
+        System.out.println("=======================================Replica siguiente====================");
     }
     
     public Ventana(){

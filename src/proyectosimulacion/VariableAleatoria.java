@@ -14,9 +14,9 @@ import javax.swing.filechooser.FileSystemView;
 public class VariableAleatoria {
     
     static final String PATH = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
-    Pseudoaleatorio A1 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",0);
-    Pseudoaleatorio A2 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",1);
-    Pseudoaleatorio A3 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",2);
+    Pseudoaleatorio A1 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",1);
+    Pseudoaleatorio A2 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",2);
+    Pseudoaleatorio A3 = new Pseudoaleatorio(PATH+"\\Valores Prueba Poker.txt",3);
     
     //**********Algoritmos para generar variables aleatorias discretas**********
     public int bernoulli(double p){

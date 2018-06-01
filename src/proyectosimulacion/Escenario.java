@@ -18,23 +18,23 @@ public class Escenario extends JPanel implements Runnable {
     Reloj r;
     Fila filaInspeccion;
     Fila filaReparacion;
-    Hora horaLlegadaSigBus;
+    Hora horaLlegadaBus;
     EstacionInspeccion eIns;
     EstacionReparacion eRep1;
     EstacionReparacion eRep2;
     int numBus = 0;
     int mediaExpLlegada = 120;
-    int espera = 50000;
+    int espera = 10000;
     
     public Escenario(Reloj r){
         setLayout(null);
         this.r = r;
         this.r.setBounds(800,0,200,100);
         add(this.r);
-        filaInspeccion = new Fila(250, 100);
+        filaInspeccion = new Fila(250, 100,this);
         filaInspeccion.setLocation(0,0);
         add(filaInspeccion);
-        filaReparacion = new Fila(250,100);
+        filaReparacion = new Fila(250,100, this);
         filaReparacion.setLocation(350,200);
         add(filaReparacion);
         eIns = new EstacionInspeccion(100,100);
@@ -47,42 +47,44 @@ public class Escenario extends JPanel implements Runnable {
         eRep2.setLocation(700,250);
         add(eRep2);
         double exp = va.Exponencial(mediaExpLlegada); //se genera la variable aleatoria exponencial
-        horaLlegadaSigBus = new Hora(exp); //se guarda la hora que llega el primer bus
-        System.out.println("Primer hora:            "+horaLlegadaSigBus);
+        horaLlegadaBus = new Hora(exp); //se guarda la hora que llega el primer bus
     }
     
     //Animacion
     @Override
-    public void run() {        
-        while(iniciar&&r.hora.menorQue(new Hora(9600))){
-                if(r.hora.equals(horaLlegadaSigBus)){ //se comprueba que la hora de llegada siguiente ya llegó
+    public void run() {
+        while(iniciar){
+            while(iniciar&&r.hora.menorQue(new Hora(9600))){
+                //se comprueba que la hora de llegada siguiente ya llegó
+                if(r.hora.equals(horaLlegadaBus)){ 
                     numBus++;
-                    System.out.println("Bus "+numBus+"\nHora de llegada:"+horaLlegadaSigBus);
-                    Bus b = new Bus(this, 100, 50, numBus); //se hace llegar al bus
-                    filaInspeccion.fila.offer(b); //se añade el autobus a la fila
+                    System.out.println("Bus "+numBus+"\n"
+                            + "Hora de llegada:"+horaLlegadaBus);
+                    //Hacer llegar al bus. Retorna la siguiente hora
+                    Hora h = filaInspeccion.llegada(numBus,mediaExpLlegada, horaLlegadaBus);
+                    horaLlegadaBus = horaLlegadaBus.mas(h);
                     validate();
                     repaint();
-                    double exp = va.Exponencial(mediaExpLlegada);
-                    Hora h = new Hora(exp);
-                    System.out.println(h);
-                    horaLlegadaSigBus = horaLlegadaSigBus.mas(h);
-//                    System.out.println("Siguiente hora: "+horaLlegadaSigBus);
                 }
+                //si la estacion de inspeccion ya esta libre, se extrae un bus
                 if(eIns.libre&&!filaInspeccion.fila.isEmpty()){
                     System.out.println("Hora de inicio de inspeccion: "+r.hora);
-                    Bus b = filaInspeccion.fila.poll();
-                    eIns.addBus(b,r.hora);
+                    filaInspeccion.salida(eIns,r.hora);
                     validate();
                     repaint();
                 }
+                //se comprueba si ya terminó la inspeccion del bus
                 if(!eIns.libre&&r.hora.equals(eIns.horaSalida)){
                     int reparacion = va.bernoulli(0.30);
+                    //si necesita reparacion
                     if(reparacion==1){
-                        System.out.println("El autobus necesita reparacion");
+                        System.out.println("El autobus "+eIns.bus.num+" necesita reparacion");
+                        eIns.removeBus(true, filaReparacion);
                         filaReparacion.fila.offer(eIns.bus);
                         eIns.bus = null;
                         eIns.libre = true;
                     }
+                    //si no necesita reparacion
                     else{
                         System.out.println("El autobus no necesita reparacion");
                         eIns.bus = null;
@@ -130,15 +132,22 @@ public class Escenario extends JPanel implements Runnable {
                 //Mantiene ocupado el hilo por 10000 nanosegundos
                 esperar(espera);
             
+            }
+            System.out.println("NUMERO TOTAL DE BUSES: "+numBus);
+            System.out.println("PROMEDIO DE ESPERA EN LA FILA DE INSPECCION: "
+                    + filaInspeccion.sumaEsperas.entre(numBus));
+            System.out.println("PROMEDIO DE ESPERA EN LA FILA DE REPARACION: "
+                    + filaReparacion.sumaEsperas.entre(numBus));
+            break;
         }
     }
     
-    public synchronized void esperar(int nanosegundos){
+    public void esperar(int nanosegundos){
         long espera = System.nanoTime()+nanosegundos;
         while (espera>System.nanoTime()) {}
     }
     
-    public synchronized void setEspera(int nanosegundos){
+    public void setEspera(int nanosegundos){
         espera = nanosegundos;
     }
     

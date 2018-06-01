@@ -40,9 +40,12 @@ public class EstacionInspeccion extends JPanel{
         }
     }
     
+    public void removeBus(boolean reparacion, Fila fRep){
+        
+    }
+    
     @Override
     public void paintComponent(Graphics g){
-        g.drawRect(0, 0, getWidth(), getHeight());
         if(bus!=null){
             bus.setLocation(0, 0);
             add(bus);
