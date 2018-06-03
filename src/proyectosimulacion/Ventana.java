@@ -10,8 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -26,14 +28,16 @@ public class Ventana extends JFrame {
     JPanel botones = new JPanel();
     Reloj r = new Reloj();
     Escenario escenario = new Escenario(r);
-    JSlider slider = new JSlider(100,1000000,500000);
+    JSlider slider = new JSlider(0,100000);
+    JLabel t1 = new JLabel("Media en minutos de llegadas de buses");
+    JTextField mediaExpLlegadas = new JTextField("120");
     Thread t;
     Thread t2;
     
     public Ventana(Ventana v){
         this();
         escenario.va = v.escenario.va;
-        System.out.println("=======================================Replica siguiente====================");
+        escenario.numReplica = v.escenario.numReplica+1;
     }
     
     public Ventana(){
@@ -60,6 +64,7 @@ public class Ventana extends JFrame {
                     inicio_pausa.setText("Pausar");
                 }
                 r.iniciar = !r.iniciar;
+                escenario.setMediaExpLlegadas(Integer.parseInt(mediaExpLlegadas.getText()));
                 Thread t = new Thread(escenario);
                 t.start();
 //                Thread t2 = new Thread(r);
@@ -70,14 +75,16 @@ public class Ventana extends JFrame {
         reiniciar.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new Ventana(Ventana.this).setVisible(true);
+                dispose();
             }
         });
     }
     
     private void buildLayout(){
         slider.setInverted(true);
+        botones.add(t1);
+        botones.add(mediaExpLlegadas);
         botones.add(inicio_pausa);
         botones.add(reiniciar);
         botones.add(slider);

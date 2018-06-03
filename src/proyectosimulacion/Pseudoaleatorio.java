@@ -35,6 +35,9 @@ public class Pseudoaleatorio {
                     C = Integer.parseInt(split[1]);
                     Xn = Integer.parseInt(split[2]);
                     M = Integer.parseInt(split[3]);
+                    for (int i = 0; i < 50; i++) {
+                        getNum();
+                    }
                     break;
                 }
             }
@@ -45,10 +48,6 @@ public class Pseudoaleatorio {
             JOptionPane.showMessageDialog(null, "No se pudo leer el archivo");
             System.exit(1);
         }
-    }
-    
-    public Pseudoaleatorio(String ruta){
-        this(ruta,1);
     }
     
     public double getNum(){

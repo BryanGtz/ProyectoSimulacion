@@ -5,6 +5,8 @@
  */
 package proyectosimulacion;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 
 /**
@@ -22,9 +24,11 @@ public class Escenario extends JPanel implements Runnable {
     EstacionInspeccion eIns;
     EstacionReparacion eRep1;
     EstacionReparacion eRep2;
+    List<Bus> buses = new ArrayList();
     int numBus = 0;
     int mediaExpLlegada = 120;
     int espera = 10000;
+    int numReplica = 1;
     
     public Escenario(Reloj r){
         setLayout(null);
@@ -46,83 +50,88 @@ public class Escenario extends JPanel implements Runnable {
         eRep2 = new EstacionReparacion(100,100);
         eRep2.setLocation(700,250);
         add(eRep2);
-        double exp = va.Exponencial(mediaExpLlegada); //se genera la variable aleatoria exponencial
-        horaLlegadaBus = new Hora(exp); //se guarda la hora que llega el primer bus
+        
+//        System.out.println("Primer hora: "+horaLlegadaBus);
+    }
+    
+    public void setMediaExpLlegadas(int m_e_ll){
+        mediaExpLlegada = m_e_ll;
     }
     
     //Animacion
     @Override
-    public void run() {
+    public synchronized void run() {
         while(iniciar){
+            double exp = va.Exponencial(mediaExpLlegada); //se genera la variable aleatoria exponencial
+            horaLlegadaBus = new Hora(exp); //se guarda la hora que llega el primer bus
             while(iniciar&&r.hora.menorQue(new Hora(9600))){
-                //se comprueba que la hora de llegada siguiente ya llegó
+                //se comprueba que la hora de entrada siguiente ya llegó
                 if(r.hora.equals(horaLlegadaBus)){ 
                     numBus++;
-                    System.out.println("Bus "+numBus+"\n"
-                            + "Hora de llegada:"+horaLlegadaBus);
-                    //Hacer llegar al bus. Retorna la siguiente hora
-                    Hora h = filaInspeccion.llegada(numBus,mediaExpLlegada, horaLlegadaBus);
+                    Bus b = new Bus(this,100,50,numBus,horaLlegadaBus);//crear el bus
+                    buses.add(b);//Se añade a la lista de buses del sistema
+                    filaInspeccion.entrada(b);//entra al bus a la fila de inspeccion
+                    //se genera la sig va de llegada del bus
+                    Hora h = new Hora(va.Exponencial(mediaExpLlegada));
+                    //se suma la hora actual con la de la va
                     horaLlegadaBus = horaLlegadaBus.mas(h);
-                    validate();
-                    repaint();
+                    //se actualiza el panel
+//                    validate();
+//                    repaint();
                 }
                 //si la estacion de inspeccion ya esta libre, se extrae un bus
                 if(eIns.libre&&!filaInspeccion.fila.isEmpty()){
-                    System.out.println("Hora de inicio de inspeccion: "+r.hora);
+                    //se saca el bus de la fila de inspeccion
                     filaInspeccion.salida(eIns,r.hora);
-                    validate();
-                    repaint();
+//                    validate();
+//                    repaint();
                 }
                 //se comprueba si ya terminó la inspeccion del bus
                 if(!eIns.libre&&r.hora.equals(eIns.horaSalida)){
                     int reparacion = va.bernoulli(0.30);
                     //si necesita reparacion
                     if(reparacion==1){
-                        System.out.println("El autobus "+eIns.bus.num+" necesita reparacion");
-                        eIns.removeBus(true, filaReparacion);
-                        filaReparacion.fila.offer(eIns.bus);
-                        eIns.bus = null;
-                        eIns.libre = true;
+                        Bus bus = eIns.removeBus();
+                        filaReparacion.entrada(bus);
+                        bus.reparacion = 1;
+                        bus.llegadaFilaRep = new Hora(r.hora);
                     }
                     //si no necesita reparacion
                     else{
-                        System.out.println("El autobus no necesita reparacion");
-                        eIns.bus = null;
-                        eIns.libre = true;
+                        Bus bus = eIns.removeBus();
+                        bus.salida = new Hora(r.hora);
                     }
-                    validate();
-                    repaint();
+//                    validate();
+//                    repaint();
                 }
+                //Si la estacion de reparacion 1 esta libre, se extrae un bus
                 if(eRep1.libre&&!filaReparacion.fila.isEmpty()){
-                    System.out.println("Hora de inicio de reparación: "+r.hora);
-                    Bus b = filaReparacion.fila.poll();
-                    eRep1.addBus(b,r.hora);
-                    validate();
-                    repaint();
+                    filaReparacion.salida(eRep1, r.hora);
+//                    validate();
+//                    repaint();
                 }
+                //Si no, se comprueba que la estacion de reparacion esté libre
                 else if(eRep2.libre&&!filaReparacion.fila.isEmpty()){
-                    System.out.println("Hora de inicio de reparación: "+r.hora);
-                    Bus b = filaReparacion.fila.poll();
-                    eRep2.addBus(b,r.hora);
-                    validate();
-                    repaint();
+                    filaReparacion.salida(eRep2, r.hora);
+//                    validate();
+//                    repaint();
                 }
                 if(!eRep1.libre&&r.hora.equals(eRep1.horaSalida)){
-                    System.out.println("Terminó la reparacion");
-                    eRep1.liberar();
-                    validate();
-                    repaint();
+//                    System.out.println("Terminó la reparacion");
+                    eRep1.removeBus();
+//                    validate();
+//                    repaint();
                 }
                 if(!eRep2.libre&&r.hora.equals(eRep2.horaSalida)){
-                    System.out.println("Terminó la reparacion");
-                    eRep2.liberar();
-                    validate();
-                    repaint();
+//                    System.out.println("Terminó la reparacion");
+                    eRep2.removeBus();
+//                    validate();
+//                    repaint();
                 }
-                r.hora.mas(1);
+                r.hora = r.hora.mas(1);
                 r.reloj.setText(r.hora.toString());
 //                System.out.println(r.hora);
-                validate();
+                revalidate();
                 repaint();
 //                try {
 //                    Thread.sleep(1);
@@ -133,11 +142,33 @@ public class Escenario extends JPanel implements Runnable {
                 esperar(espera);
             
             }
+            double minUsoEsInsp = 0;
+            double minUsoEsRep = 0;
+            int busesReparados = 0;
+            System.out.println("NUM REPLICA: "+numReplica);
+            for(Bus b:buses){
+                System.out.println(b);
+                busesReparados+=b.reparacion;
+                minUsoEsInsp += b.duracionInsp.aMinutos();
+                if(b.duracionRep!=null){
+                    minUsoEsRep += b.duracionRep.aMinutos();
+                }
+            }
             System.out.println("NUMERO TOTAL DE BUSES: "+numBus);
             System.out.println("PROMEDIO DE ESPERA EN LA FILA DE INSPECCION: "
                     + filaInspeccion.sumaEsperas.entre(numBus));
             System.out.println("PROMEDIO DE ESPERA EN LA FILA DE REPARACION: "
                     + filaReparacion.sumaEsperas.entre(numBus));
+            System.out.println("NUMERO DE AUTOBUSES QUE NECESTARON REPARACION: "
+                    + busesReparados);
+            System.out.println("LONGITUD MAXIMA DE FILA DE INSPECCION: "
+                    +filaInspeccion.longMax);
+            System.out.println("LONGITUD MAXIMA DE FILA DE REPARACION: "
+                    +filaReparacion.longMax);
+            System.out.println("PORCENTAJE DE UTILIZACION DE ESTACION DE INSPECCION: "
+                    +minUsoEsInsp*100/9600+"%");
+            System.out.println("PORCENTAJE PROMEDIO DE UTILIZACION DE CADA ESTACION DE REPARACION: "
+                    +minUsoEsRep/2*100/9600+"%");
             break;
         }
     }

@@ -61,13 +61,13 @@ public class Hora {
     public Hora mas(Hora h){
         if(segundos+h.segundos>59){
             minutos++;
-            segundos = 0;
+            segundos = segundos+h.segundos-60;
         }
         else
             segundos+=h.segundos;
         if(minutos+h.minutos>59){
             hora++;
-            minutos = 0;
+            minutos = minutos+h.minutos-60;
         }
         else
             minutos+=h.minutos;
@@ -90,35 +90,21 @@ public class Hora {
     }
     
     public Hora menos(Hora h){
-        if(segundos-h.segundos<0){
-            if((minutos+(segundos-h.segundos))<0)
-                minutos = 59;
-            segundos = 59;
-        }
-        else
-            segundos-=h.segundos;
-        if(minutos-h.minutos<0){
-            if((hora-1)<0)
-                minutos = 59;
-            minutos = 0;
-        }
-        else
-            minutos-=h.minutos;
-        hora-=h.hora;
-        return this;
+        double min = aMinutos()-h.aMinutos();
+        return new Hora(min);
     }
     
     public Hora entre(Hora h){
-        double minThis = aSeg();
-        double minH = h.aSeg();
+        double minThis = aMinutos();
+        double minH = h.aMinutos();
         return new Hora(minThis/minH);
     }
     
     public Hora entre(int num){
-        return new Hora(aSeg()/num);
+        return new Hora(aMinutos()/num);
     }
     
-    public double aSeg(){
+    public double aMinutos(){
         return (this.hora*60)+(this.minutos)+(this.segundos/60);
     }
 

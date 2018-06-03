@@ -12,7 +12,7 @@ import javax.swing.JPanel;
  *
  * @author HP
  */
-public class EstacionInspeccion extends JPanel{
+public class EstacionInspeccion extends JPanel implements Estacion{
     
     boolean libre;
     Hora horaSalida;
@@ -26,6 +26,7 @@ public class EstacionInspeccion extends JPanel{
         horaSalida = new Hora();
     }
     
+    @Override
     public void addBus(Bus b, Hora horaInicio){
         if(libre){
             if(b!=null){
@@ -33,15 +34,21 @@ public class EstacionInspeccion extends JPanel{
                 libre = false;
                 double exp = va.Uniforme(15, 63);
                 Hora duracionServicio = new Hora(exp);
-                System.out.println("Duracion del servicio: "+duracionServicio);
+//                System.out.println("Duracion del servicio: "+duracionServicio);
+                bus.duracionInsp = new Hora(duracionServicio);
                 horaSalida = duracionServicio.mas(horaInicio);
-                System.out.println("Hora de salida: "+horaSalida);
+//                System.out.println("Hora de salida: "+horaSalida);
+                bus.finalInsp = new Hora(horaSalida);
             }
         }
     }
     
-    public void removeBus(boolean reparacion, Fila fRep){
-        
+    @Override
+    public Bus removeBus(){
+        Bus b = bus;
+        bus = null;
+        libre = true;
+        return b;
     }
     
     @Override
